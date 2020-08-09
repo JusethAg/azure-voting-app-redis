@@ -71,18 +71,20 @@ pipeline {
 		stage('Container scanning') {
 			parallel {
 				stage('Run Anchore') {
-					// steps {
-					// 	anchore name: 'anchore_images'
-					// }
+					steps {
+						echo "Running anchore scanning"
+						// anchore name: 'anchore_images'
+					}
 				}
 
 				stage('Run Trivy') {
-					// steps {
-					// 	// sleep(time: 30, unit: 'SECONDS')
-					// 	sh(script: """
-					// 		trivy jusethag/jenkins-test
-					// 	""")
-					// }
+					steps {
+						echo "Running trivy scanning"
+						sleep(time: 30, unit: 'SECONDS')
+						// sh(script: """
+						// 	trivy jusethag/jenkins-test
+						// """)
+					}
 				}
 			}
 		}
