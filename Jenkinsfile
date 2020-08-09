@@ -122,7 +122,7 @@ pipeline {
 			}
 		}
 
-		stage('Deploy to QA') {
+		stage('Deploy to PROD') {
 			when {
 				branch 'master'
 			}
