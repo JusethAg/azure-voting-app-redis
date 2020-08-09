@@ -56,35 +56,90 @@ pipeline {
 
 		stage('Push container') {
 			steps {
-				echo "Workspace is $WORKSPACE"
-				dir("$WORKSPACE/azure-vote") {
-					script {
-						docker.withRegistry('https://index.docker.io/v1', 'DockerHub') {
-							def image = docker.build('jusethag/jenkins-test:latest')
-							image.push()
-						}
-					}
-				}
+				// echo "Workspace is $WORKSPACE"
+				// dir("$WORKSPACE/azure-vote") {
+				// 	script {
+				// 		docker.withRegistry('https://index.docker.io/v1', 'DockerHub') {
+				// 			def image = docker.build('jusethag/jenkins-test:latest')
+				// 			image.push()
+				// 		}
+				// 	}
+				// }
 			}
 		}
 
 		stage('Container scanning') {
 			parallel {
 				stage('Run Anchore') {
-					steps {
-						anchore name: 'anchore_images'
-					}
+					// steps {
+					// 	anchore name: 'anchore_images'
+					// }
 				}
 
 				stage('Run Trivy') {
-					steps {
-						// sleep(time: 30, unit: 'SECONDS')
-						sh(script: """
-							trivy jusethag/jenkins-test
-						""")
-					}
+					// steps {
+					// 	// sleep(time: 30, unit: 'SECONDS')
+					// 	sh(script: """
+					// 		trivy jusethag/jenkins-test
+					// 	""")
+					// }
 				}
 			}
 		}
+
+		stage('Deploy to QA') {
+			environment {
+				ENVIRONMENT = 'qa'
+			}
+			steps {
+				echo "Deploying to ${ENVIRONMENT}"
+				// acsDeploy(
+				// 	azureCredentialsId: "azure-jenkins-app",
+				// 	configFiles: "**/*.yaml",
+				// 	contianerService: "${ENVIRONMENT}-demo-cluster | AKS",
+				// 	resourceGroupName:  "${ENVIRONMENT}-demo",
+				// 	sshCredentialsId: ""
+				// )
+			}
+		}
+		stage("Approve PROD Deploy") {
+			when {
+				branch 'master'
+			}
+			options {
+				timeout(time: 1: unit: 'HOURS')
+			}
+			steps {
+				input message: "Deploy?"
+			}
+			post {
+				success {
+					echo "Production deploy approved"
+				}
+				aborted {
+					echo "Production deploy denied"
+				}
+			}
+		}
+
+		stage('Deploy to QA') {
+			when {
+				branch 'master'
+			}
+			environment {
+				ENVIRONMENT = 'prod'
+			}
+			steps {
+				echo "Deploying to ${ENVIRONMENT}"
+				// acsDeploy(
+				// 	azureCredentialsId: "azure-jenkins-app",
+				// 	configFiles: "**/*.yaml",
+				// 	contianerService: "${ENVIRONMENT}-demo-cluster | AKS",
+				// 	resourceGroupName:  "${ENVIRONMENT}-demo",
+				// 	sshCredentialsId: ""
+				// )
+			}
+		}
+		
     }
 }
