@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 started=false
 count=1
 while [ "$count" != 5 -a "$started" != "true" ]; do 

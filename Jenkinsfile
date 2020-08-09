@@ -23,7 +23,7 @@ pipeline {
         stage('Start test app') {
             steps {
 				sh(script: """
-					./scripts/test_container.sh
+					bash ./scripts/test_container.sh
 				""")
 			}
 			post {
