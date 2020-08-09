@@ -23,7 +23,7 @@ pipeline {
         stage('Start test app') {
             steps {
 				sh(script: """
-					/usr/local/bin/docker-compose up -d
+					# docker-compose up -d
 					bash ./scripts/test_container.sh
 				""")
 			}
@@ -48,7 +48,7 @@ pipeline {
 		stage('Stop test app') {
 			steps {
 				sh(script: """
-					/usr/local/bin/docker-compose down
+					# docker-compose down
 				""")
 			}
 			

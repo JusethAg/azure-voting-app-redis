@@ -5,7 +5,7 @@ while [ "$count" != 5 -a "$started" != "true" ]; do
 
   echo "${STAGE_NAME} starting container... [Attempt: ${count}]"
   
-  status_code=$(curl -LI http://localhost:8080 -o /dev/null -w '%{http_code}\n' -s)
+  status_code=$(curl -LI http://localhost:8081 -o /dev/null -w '%{http_code}\n' -s)
 
   if [ "$status_code" -eq 200 ]; then 
     started=true
