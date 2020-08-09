@@ -60,9 +60,28 @@ pipeline {
 				dir("$WORKSPACE/azure-vote") {
 					script {
 						docker.withRegistry('https://index.docker.io/v1', 'DockerHub') {
-							def image = docker.build('jusethag/jenkins-course:latest')
+							def image = docker.build('jusethag/jenkins-test:latest')
 							image.push()
 						}
+					}
+				}
+			}
+		}
+
+		stage('Container scanning') {
+			parallel {
+				stage('Run Anchore') {
+					steps {
+						anchore name: 'anchore_images'
+					}
+				}
+
+				stage('Run Trivy') {
+					steps {
+						// sleep(time: 30, unit: 'SECONDS')
+						sh(script: """
+							trivy jusethag/jenkins-test
+						""")
 					}
 				}
 			}
