@@ -7,8 +7,8 @@ while [ "$count" != 5 -a "$started" != "true" ]; do
   
   status_code=$(curl -LI http://localhost:8081 -o /dev/null -w '%{http_code}\n' -s)
   echo "The status is $status_code"
-  
-  if [ "$status_code" -eq 500 ]; then 
+
+  if [ "$status_code" -eq 000 ]; then 
     started=true
   else
     sleep 1
