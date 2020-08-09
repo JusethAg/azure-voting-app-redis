@@ -38,7 +38,7 @@ pipeline {
 
 		stage('Run tets') {
 			steps {
-				sh(scripts: """
+				sh(script: """
 					pytest ./test_sample.py
 				""")
 			}
